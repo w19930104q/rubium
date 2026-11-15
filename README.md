@@ -18,6 +18,10 @@ browser.current_response
 # Click to the some element (css selector):
 browser.click('some selector')
 
+# XPath selectors are supported too — pass type: :xpath explicitly,
+# or just write an XPath expression (auto-detected when it starts with /, ./, ../ or "("):
+browser.click('//button[@id="submit"]', type: :xpath)
+
 # Get current cookies:
 browser.cookies
 
@@ -27,8 +31,20 @@ browser.set_cookies([
   { name: 'another_cookie_name', value: 'another_cookie_value', domain: '.another-cookie-domain.com' }
 ])
 
-# Fill in some field:
-browser.fill_in('some field selector', 'Some text')
+# Fill in some field. Works with input, textarea, select (option matched by
+# value or visible text) and contenteditable elements. Selectors and values
+# are passed to the browser as data, so any quotes, backslashes, backticks or
+# newlines in the text are written verbatim and can never be executed as code:
+browser.fill_in('some field selector', 'Some "text" with `symbols` and \\ slashes')
+
+begin
+  browser.fill_in('#missing', 'value')
+rescue Rubium::Browser::ElementNotFound => e
+  # selector matched no element
+rescue Rubium::Browser::ElementNotEditable => e
+  # element exists but cannot receive a value (disabled/readonly, wrong tag, ...)
+end
+# Both errors inherit from Rubium::Browser::SelectorError.
 
 # Tells if current response has provided css selector or not. You can
 # provide optional `wait:` argument (in seconds) to set the max wait time for the selector:

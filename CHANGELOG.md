@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.2] - 2025-12-31 
+## [Unreleased]
+
+### Security
+- `click`, `fill_in` and `send_key_on` no longer interpolate selectors and
+  values into JavaScript. They are passed as data over the CDP
+  `Runtime.callFunctionOn` channel, so quotes, backslashes, backticks and
+  newlines in user input can no longer break the syntax or execute injected
+  code (CVE-style selector/value injection).
+
+### Added
+- CSS **and XPath** selector support for `click`, `fill_in` and `send_key_on`
+  via an optional `type:` keyword (`:css`/`:xpath`); XPath expressions are
+  also auto-detected when the selector starts with `/`, `./`, `../` or `(`.
+- `Rubium::Browser::ElementNotFound` for selectors matching no element,
+  `Rubium::Browser::ElementNotEditable` for disabled/readonly or
+  non-input controls (and missing `<select>` options), and a common
+  `Rubium::Browser::SelectorError` base class (also raised on invalid selectors).
+- `fill_in` now supports `input`, `textarea`, `select` (option by value or
+  visible text) and `contenteditable` elements, firing one `input` and one
+  `change` event per successful write.
+
+### Changed
+- Method signatures are unchanged for existing callers; `type:` is an added
+  optional keyword argument.
+
+## [0.3.2] - 2025-12-31
  
 * Add ostruct to gemspec (Ruby 3.5 compatibility)
 * Rename DEFAULT_PUPPETEER_ARGS to DEFAULT_ARGS

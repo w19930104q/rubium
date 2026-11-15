@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Rubium test form</title>
+  <style>.hidden { display: none; }</style>
+</head>
+<body>
+  <form id="checkout-form" action="#" onsubmit="return false">
+    <!-- Two controls sharing the same name attribute -->
+    <input type="text" name="note" id="note-first" class="note-field" value="">
+    <input type="text" name="note" id="note-second" class="note-field" value="">
+
+    <!-- Selector whose CSS representation contains quotes and backslashes -->
+    <input type="text" id="weird&quot;id`\x" data-test='say "hi"'>
+
+    <textarea id="remarks"></textarea>
+
+    <select id="country">
+      <option value="">-- choose --</option>
+      <option value="fr">France</option>
+      <option value="jp">Japan</option>
+    </select>
+
+    <div id="editor" contenteditable="true"></div>
+
+    <input type="text" id="readonly-field" value="locked" readonly>
+    <input type="text" id="disabled-field" value="frozen" disabled>
+    <input type="checkbox" id="check-field">
+    <button type="button" id="submit-btn">Submit</button>
+
+    <!-- Click target with a quote in its id as well -->
+    <button type="button" id='btn "quoted"'>Quoted</button>
+  </form>
+
+  <!-- Counters used to assert input/change events fire exactly once each -->
+  <div id="counters"
+       data-inputs="0"
+       data-changes="0"
+       data-clicks="0"
+       data-keydowns="0"></div>
+
+  <script>
+    var counters = document.getElementById('counters');
+    document.addEventListener('input', function () {
+      counters.dataset.inputs = String(Number(counters.dataset.inputs) + 1);
+    });
+    document.addEventListener('change', function () {
+      counters.dataset.changes = String(Number(counters.dataset.changes) + 1);
+    });
+    document.addEventListener('click', function () {
+      counters.dataset.clicks = String(Number(counters.dataset.clicks) + 1);
+    });
+    document.addEventListener('keydown', function () {
+      counters.dataset.keydowns = String(Number(counters.dataset.keydowns) + 1);
+    });
+  </script>
+</body>
+</html>
